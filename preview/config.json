@@ -1,0 +1,5 @@
+{
+  "_comment": "这些值会被写进 dict-data.js 的 cfg 段。直接改安装目录下的 dict-data.js 也生效，无需重新编译。",
+  "maxWords": 12,
+  "stopwords": "a an the and or but if then than that this these those there here of in on at to from for with without by as is am are was were be been being do does did done have has had having will would shall should can could may might must not no nor so such very too also just only into onto about above after again against all any because before below between both down during each few more most other some up out over under while who whom whose which what when where why how it its he she they them his her their we us you your i me my our ours yours theirs him hers"
+}

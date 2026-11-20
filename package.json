@@ -1,0 +1,150 @@
+{
+  "name": "md-word-lookup",
+  "displayName": "划词查词",
+  "description": "在 Markdown 中选中英文单词，立即在光标旁看到中文释义（离线词典，无需联网）。",
+  "version": "0.1.0",
+  "publisher": "local-tools",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true,
+      "description": "只读取内置离线词典，不执行工作区代码。"
+    },
+    "virtualWorkspaces": true
+  },
+  "keywords": [
+    "dictionary",
+    "markdown",
+    "translate",
+    "chinese",
+    "offline"
+  ],
+  "activationEvents": [
+    "onLanguage:markdown"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "markdown.previewScripts": [
+      "./preview/dict-data.js",
+      "./preview/mdwl.js"
+    ],
+    "commands": [
+      {
+        "command": "mdWordLookup.lookup",
+        "title": "查词：查看选中单词的释义",
+        "category": "划词查词"
+      },
+      {
+        "command": "mdWordLookup.lookupClipboard",
+        "title": "查词：查看剪贴板里的单词释义",
+        "category": "划词查词"
+      },
+      {
+        "command": "mdWordLookup.openPreview",
+        "title": "在经典预览中打开当前 Markdown（划词可用）",
+        "category": "划词查词"
+      },
+      {
+        "command": "mdWordLookup.toggleAutoLookup",
+        "title": "开关：选中后自动查词",
+        "category": "划词查词"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "mdWordLookup.lookup",
+        "key": "ctrl+alt+d",
+        "mac": "cmd+alt+d",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "mdWordLookup.lookupClipboard",
+        "key": "ctrl+alt+d",
+        "mac": "cmd+alt+d",
+        "when": "!editorTextFocus"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "mdWordLookup.lookup",
+          "when": "editorLangId == markdown",
+          "group": "navigation@99"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "mdWordLookup.lookup",
+          "when": "editorLangId == markdown"
+        },
+        {
+          "command": "mdWordLookup.toggleAutoLookup",
+          "when": "editorLangId == markdown"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "划词查词",
+      "properties": {
+        "mdWordLookup.autoLookup": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "选中文中单词后自动弹出释义。设为 `false` 时只能用快捷键（`Ctrl+Alt+D`）或右键菜单触发。"
+        },
+        "mdWordLookup.delay": {
+          "type": "number",
+          "default": 400,
+          "minimum": 120,
+          "maximum": 3000,
+          "markdownDescription": "自动查词前的等待时间（毫秒），避免拖动选择时反复查询。"
+        },
+        "mdWordLookup.languages": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [
+            "markdown"
+          ],
+          "markdownDescription": "启用划词查词的编辑器语言 ID，例如 `markdown`、`plaintext`、`markdown`+`latex`。"
+        },
+        "mdWordLookup.showStatusBarHint": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "查词时同时在左侧状态栏显示一行简要释义。"
+        },
+        "mdWordLookup.clipboardWatch": {
+          "type": "boolean",
+          "default": true,
+          "markdownDescription": "监听剪贴板：在 webview（Markdown Editor、预览等）里选中单词按 `Ctrl+C` 后自动弹出释义。关闭后只能手动按 `Ctrl+Alt+D`。"
+        },
+        "mdWordLookup.webviewToast": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "剪贴板自动查词时是否再弹右下角通知。默认关闭——通知不会自动消失，连续查词会堆叠，状态栏已经够用。"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "build:dict": "node scripts/build-dict.mjs",
+    "build:preview": "node scripts/build-preview-data.mjs",
+    "stats": "node scripts/dict-stats.mjs",
+    "test": "node test/harness.mjs",
+    "package": "vsce package --allow-missing-repository --no-dependencies"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/vscode": "^1.90.0",
+    "@vscode/vsce": "^4.1.1",
+    "typescript": "^5.7.2"
+  }
+}
